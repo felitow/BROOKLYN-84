@@ -10,7 +10,7 @@ namespace BROOKLYN.SHARED.Entities
     public class Delivery
     {
 
-        public int ID { get; set; }
+        public int Id { get; set; }
 
 
         [Display(Name = "Pedido a cargo")]
