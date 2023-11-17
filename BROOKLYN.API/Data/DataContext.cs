@@ -1,23 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using BROOKLYN.SHARED.Entities;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-/*using BROOKLYN.SHARED.DTOs*/
-
 
 namespace BROOKLYN.API.Data
 {
     public class DataContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
-        {
-
-        }
-
-        //public DbSet<LoginDTO> LoginDTO { get; set; }
-        //public DbSet<TokenDTO> TokenDTO { get; set; }
-        //public DbSet<User> User { get; set; }
-        //public DbSet<UserDTO> USerDTO { get; set; }
-
+        // DbSet para cada entidad
         public DbSet<Cart> Carts { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Delivery> Deliveries { get; set; }
@@ -27,19 +15,62 @@ namespace BROOKLYN.API.Data
         public DbSet<Product> Products { get; set; }
 
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Cart>().HasIndex(c => c.Order).IsUnique();
-            modelBuilder.Entity<Customer>().HasIndex(c => c.EmailCustom).IsUnique();
-            modelBuilder.Entity<Delivery>().HasIndex(c => c.Employee).IsUnique();
-            modelBuilder.Entity<Employee>().HasIndex(c => c.AddressEmpl).IsUnique();
-            modelBuilder.Entity<Order>().HasIndex(c => c.Employee).IsUnique();
-            modelBuilder.Entity<Pay>().HasIndex(c => c.MethodPay).IsUnique();
-            modelBuilder.Entity<Product>().HasIndex(c => c.NameProd).IsUnique();
-            
 
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Configuración de las relaciones
+
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Customer)
+                .WithMany(c => c.Orders)
+                .HasForeignKey(o => o.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Employee)
+                .WithMany(e => e.Orders)
+                .HasForeignKey(o => o.EmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Delivery)
+                .WithMany(d => d.Orders)
+                .HasForeignKey(o => o.DeliveryId);
+
+            modelBuilder.Entity<Cart>()
+                .HasOne(c => c.Order)
+                .WithMany(o => o.Carts)
+                .HasForeignKey(c => c.OrderId);
+
+            modelBuilder.Entity<Cart>()
+                .HasMany(c => c.Products)
+                .WithMany(p => p.Carts)
+                .UsingEntity(j => j.ToTable("CartProducts"));
+
+            modelBuilder.Entity<Employee>()
+                .HasMany(e => e.Deliveries)
+                .WithOne(d => d.Employee)
+                .HasForeignKey(d => d.EmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Pay>()
+                .HasOne(p => p.Order)
+                .WithOne(o => o.Pay)
+                .HasForeignKey<Pay>(p => p.OrderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Product>()
+                .HasOne(p => p.Employee)
+                .WithMany(e => e.Products)
+                .HasForeignKey(p => p.EmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

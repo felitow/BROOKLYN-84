@@ -1,36 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BROOKLYN.SHARED.Entities
 {
     public class Product
     {
-
         public int Id { get; set; }
 
-
         [Display(Name = "Nombre del producto")]
-        [MaxLength(50, ErrorMessage = "The {0} field can not have more than {1} characters.")]
-        [Required(ErrorMessage = "The field {0} is mandatory.")]
+        [MaxLength(50, ErrorMessage = "El campo {0} no puede tener más de {1} caracteres.")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string NameProd { get; set; }
 
-
         [Display(Name = "Stock")]
-        [Required(ErrorMessage = "The field {0} is mandatory.")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public decimal StockProd { get; set; }
 
-
         [Display(Name = "Precio Unitario")]
-        [Required(ErrorMessage = "The field {0} is mandatory.")]
-        public float PriceProd { get; set; }
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        public decimal PriceProd { get; set; }
 
-
-        [Display(Name = "Empleado que lo creo")]
-        [Required(ErrorMessage = "The field {0} is mandatory.")]
+        // Propiedad de navegación para la relación con Employee
+        [Display(Name = "Empleado que lo creó")]
+        public int EmployeeId { get; set; }
         public Employee Employee { get; set; }
+
+        
+        
+
+        // Propiedad de navegación para la relación con Cart (asumiendo una relación muchos a uno)
+        [Display(Name = "Carrito asociado")]
+        public int? CartId { get; set; }
+        public Cart Cart { get; set; }
+        public ICollection<Cart> Carts { get; set; }
+
     }
 }

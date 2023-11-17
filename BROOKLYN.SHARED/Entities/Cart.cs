@@ -1,41 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BROOKLYN.SHARED.Entities
 {
     public class Cart
     {
-
         public int Id { get; set; }
 
-
-        [Display(Name = "Pedido a cargo")]
-        [Required(ErrorMessage = "The field {0} is mandatory.")]
-        public Order Order { get; set; }
-
-
-        [Display(Name = "Producto a cargo")]
-        [Required(ErrorMessage = "The field {0} is mandatory.")]
-        public Product Product { get; set; }
-
-
         [Display(Name = "Cantidad")]
-        [Required(ErrorMessage = "The field {0} is mandatory.")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public decimal AmountCart { get; set; }
 
-
         [Display(Name = "Total de la factura")]
-        [Required(ErrorMessage = "The field {0} is mandatory.")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public float PriceCart { get; set; }
-
 
         [Display(Name = "Estado")]
         [DataType(DataType.MultilineText)]
-        [Required(ErrorMessage = "The field {0} is mandatory.")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string StateCart { get; set; }
+
+
+        // Propiedades de navegación para la relación con Order
+        [Display(Name = "Pedidos asociados")]
+        public int OrderId { get; set; }
+        public Order Order { get; set; }
+        public ICollection<Order> Orders { get; set; }
+
+
+
+        // Propiedades de navegación para la relación con Product (asumiendo una relación muchos a muchos)
+        [Display(Name = "Productos en el carrito")]
+        public ICollection<Product> Products { get; set; }
     }
 }
