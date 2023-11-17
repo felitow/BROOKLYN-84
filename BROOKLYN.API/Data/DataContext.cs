@@ -13,6 +13,7 @@ namespace BROOKLYN.API.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<Pay> Pays { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<CartProduct> CartProducts { get; set; }
 
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
@@ -24,53 +25,61 @@ namespace BROOKLYN.API.Data
         {
             // Configuración de las relaciones
 
+            modelBuilder.Entity<CartProduct>()
+        .HasKey(cp => new { cp.CartId, cp.ProductId });
+
+            modelBuilder.Entity<CartProduct>()
+                .HasOne(cp => cp.Cart)
+                .WithMany(c => c.CartProducts)
+                .HasForeignKey(cp => cp.CartId);
+
+            modelBuilder.Entity<CartProduct>()
+                .HasOne(cp => cp.Product)
+                .WithMany(p => p.CartProducts)
+                .HasForeignKey(cp => cp.ProductId);
+
             modelBuilder.Entity<Order>()
-                .HasOne(o => o.Customer)
+                .HasOne(o => o.Cart)
                 .WithMany(c => c.Orders)
-                .HasForeignKey(o => o.CustomerId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(o => o.CartId);
 
-            modelBuilder.Entity<Order>()
-                .HasOne(o => o.Employee)
-                .WithMany(e => e.Orders)
-                .HasForeignKey(o => o.EmployeeId)
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Cart>()
+                .HasMany(c => c.Orders)
+                .WithOne(o => o.Cart)
+                .HasForeignKey(o => o.CartId);
 
-            modelBuilder.Entity<Order>()
-                .HasOne(o => o.Delivery)
-                .WithMany(d => d.Orders)
+            modelBuilder.Entity<Product>()
+                .HasMany(p => p.CartProducts)
+                .WithOne(cp => cp.Product)
+                .HasForeignKey(cp => cp.ProductId);
+
+            modelBuilder.Entity<Delivery>()
+                .HasMany(d => d.Orders)
+                .WithOne(o => o.Delivery)
                 .HasForeignKey(o => o.DeliveryId);
 
-            modelBuilder.Entity<Cart>()
-                .HasOne(c => c.Order)
-                .WithMany(o => o.Carts)
-                .HasForeignKey(c => c.OrderId);
-
-            modelBuilder.Entity<Cart>()
-                .HasMany(c => c.Products)
-                .WithMany(p => p.Carts)
-                .UsingEntity(j => j.ToTable("CartProducts"));
+            modelBuilder.Entity<Employee>()
+                .HasMany(e => e.Orders)
+                .WithOne(o => o.Employee)
+                .HasForeignKey(o => o.EmployeeId);
 
             modelBuilder.Entity<Employee>()
                 .HasMany(e => e.Deliveries)
                 .WithOne(d => d.Employee)
-                .HasForeignKey(d => d.EmployeeId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.EmployeeId);
 
             modelBuilder.Entity<Pay>()
                 .HasOne(p => p.Order)
                 .WithOne(o => o.Pay)
-                .HasForeignKey<Pay>(p => p.OrderId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey<Order>(o => o.PayId);
 
-            modelBuilder.Entity<Product>()
-                .HasOne(p => p.Employee)
-                .WithMany(e => e.Products)
-                .HasForeignKey(p => p.EmployeeId)
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Customer>()
+                .HasMany(c => c.Deliveries)
+                .WithOne(d => d.Customer)
+                .HasForeignKey(d => d.CustomerId);
 
 
-            base.OnModelCreating(modelBuilder);
+
         }
     }
 }

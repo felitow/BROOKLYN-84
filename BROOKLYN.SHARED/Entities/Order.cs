@@ -29,30 +29,14 @@ namespace BROOKLYN.SHARED.Entities
         public Employee Employee { get; set; }
 
 
-        // Propiedades de navegación para la relación con Delivery
-        [Display(Name = "Entregas asociadas")]
+        public int CartId { get; set; }
+        public Cart Cart { get; set; }
+
+        public int PayId { get; set; }
+        public Pay Pay { get; set; }
+
 
         public int DeliveryId { get; set; }
         public Delivery Delivery { get; set; }
-        public ICollection<Delivery> Deliveries { get; set; }
-
-
-
-
-        // Propiedades de navegación para la relación con Cart
-        [Display(Name = "Carritos asociados")]
-        public ICollection<Cart> Carts { get; set; }
-
-
-
-        // Propiedad de navegación para la relación con Customer
-        [Display(Name = "Cliente")]
-        public int CustomerId { get; set; }
-        public Customer Customer { get; set; }
-
-
-        [Display(Name = "Tipo de pago")]
-        public int PayId { get; set; }
-        public Pay Pay { get; set; }
     }
 }

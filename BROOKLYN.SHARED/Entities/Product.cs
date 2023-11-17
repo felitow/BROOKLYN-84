@@ -25,14 +25,8 @@ namespace BROOKLYN.SHARED.Entities
         public int EmployeeId { get; set; }
         public Employee Employee { get; set; }
 
-        
-        
 
-        // Propiedad de navegación para la relación con Cart (asumiendo una relación muchos a uno)
-        [Display(Name = "Carrito asociado")]
-        public int? CartId { get; set; }
-        public Cart Cart { get; set; }
-        public ICollection<Cart> Carts { get; set; }
+        public ICollection<CartProduct> CartProducts { get; set; }
 
     }
 }

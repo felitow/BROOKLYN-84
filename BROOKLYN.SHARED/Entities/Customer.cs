@@ -33,8 +33,7 @@ namespace BROOKLYN.SHARED.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string PasswordCustom { get; set; }
 
-        // Propiedad de navegación para la relación con Order
-        [Display(Name = "Pedidos asociados")]
-        public ICollection<Order> Orders { get; set; }
+
+        public ICollection<Delivery> Deliveries { get; set; }
     }
 }

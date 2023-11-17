@@ -28,6 +28,7 @@ namespace BROOKLYN.SHARED.Entities
         public ICollection<Order> Orders { get; set; }
 
 
+        public ICollection<CartProduct> CartProducts { get; set; }
 
         // Propiedades de navegación para la relación con Product (asumiendo una relación muchos a muchos)
         [Display(Name = "Productos en el carrito")]

@@ -3,13 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BROOKLYN.SHARED.Entities
 {
-    public enum EmployeeType
-    {
-        Administrador,
-        Vendedor,
-        Domiciliario,
-        Desarrollador
-    }
+    
 
     public class Employee
     {
@@ -43,24 +37,11 @@ namespace BROOKLYN.SHARED.Entities
 
         [Display(Name = "Cargo del empleado")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public EmployeeType EmployeeType { get; set; }
-
-
-
-        // Propiedades de navegación para la relación con Delivery
-        [Display(Name = "Entregas asociadas")]
-        public ICollection<Delivery> Deliveries { get; set; }
-
-
-
-
-        // Propiedades de navegación para la relación con Product
-        [Display(Name = "Productos creados")]
-        public ICollection<Product> Products { get; set; }
-
-
-
+        public string EmployeeType { get; set; }
 
         public ICollection<Order> Orders { get; set; }
+        public ICollection<Product> Products { get; set; }
+
+        public ICollection<Delivery> Deliveries { get; set; }
     }
 }

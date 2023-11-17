@@ -9,17 +9,18 @@ namespace BROOKLYN.SHARED.Entities
 
 
 
-        // Propiedades de navegación para la relación con Order
-        [Display(Name = "Pedidos asociados")]
+        
+
+        // Otras propiedades...
+
+        public int EmployeeId { get; set; }
+        public Employee Employee { get; set; }
+        public Order Order { get; set; }
+
+
         public ICollection<Order> Orders { get; set; }
 
-
-
-        // Propiedades de navegación para la relación con Employee
-        [Display(Name = "Empleados asociados")]
-        public int EmployeeId { get; set; }
-
-        public Employee Employee { get; set; }
-        public ICollection<Employee> Employees { get; set; }
+        public int CustomerId { get; set; }
+        public Customer Customer { get; set; }
     }
 }
